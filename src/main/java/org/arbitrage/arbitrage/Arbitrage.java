@@ -19,7 +19,7 @@ public class Arbitrage {
         buyOrderbook = orderbooks.get(0);
         sellOrderbook = orderbooks.get(1);
         this.network = getCheapestNetwork();
-        this.offer = getBestOffer(500);
+        this.offer = getBestOffer(900);
     }
 
     private Network getCheapestNetwork() {
@@ -90,6 +90,7 @@ public class Arbitrage {
 
         if (network == null) return null;
         if (offer == null) return null;
+        if (offer.getSpread() > 0.2) return null;
 
         arbitrage.put("offer", offer.toJson());
 

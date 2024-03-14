@@ -32,6 +32,8 @@ public abstract class APIExchangeClient implements Client {
     private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
     protected final CoinsProcessor processor;
     private final SemaphoreManager<Void> semaphoreManager;
+    private final int[] milestones;
+    private long subscriptionCount = 0;
 
     public APIExchangeClient(Exchange exchange, CoinsProcessor processor, SemaphoreManager<Void> semaphoreManager) {
         this.processor = processor;
@@ -42,6 +44,7 @@ public abstract class APIExchangeClient implements Client {
             .executor(executorService)
             .build();
         this.semaphoreManager = semaphoreManager;
+        this.milestones = createSubscriptionMilestones(coins.size());
     }
 
     protected abstract URI getOrderbookUriByCoin(String coin);
@@ -82,6 +85,16 @@ public abstract class APIExchangeClient implements Client {
                     )
                     .build()
             ));
+    }
+
+    protected void increaseSubscriptionCount() {
+        subscriptionCount++;
+
+        Integer milestone = getMilestone(subscriptionCount, milestones);
+
+        if (milestone == null) return;
+
+        logger.info(String.format("%s: Subscribed to %d of %d", exchange.exchange, milestone, this.coins.size()));
     }
 
     private CompletableFuture<Void> sendRequest(String coin, HttpRequest request, BiConsumer<String, HttpResponse<String>> processResponse) {

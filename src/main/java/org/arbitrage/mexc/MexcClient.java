@@ -36,6 +36,7 @@ public class MexcClient extends APIExchangeClient {
         if (orderbook == null) {
             Orderbook newOrderbook = new MexcOrderbook(processor.getCoin(coin, Exchange.MEXC));
             orderbook = newOrderbook;
+            increaseSubscriptionCount();
             orderbooks.put(coin, newOrderbook);
         }
 

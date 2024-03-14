@@ -56,6 +56,10 @@ public class Offer {
         return profit;
     }
 
+    public Double getSpread() {
+        return spread;
+    }
+
     public JSONObject toJson() {
         JSONObject offer = new JSONObject();
 

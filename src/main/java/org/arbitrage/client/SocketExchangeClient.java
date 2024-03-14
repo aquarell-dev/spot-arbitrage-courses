@@ -34,7 +34,7 @@ public abstract class SocketExchangeClient implements Client {
         this.coins = processor.getCoins(exchange);
         this.exchange = exchange;
         this.client = createClient();
-        this.milestones = createMilestones(coins.size());
+        this.milestones = createSubscriptionMilestones(coins.size());
         this.batchSize = batchSize;
     }
 
@@ -43,7 +43,7 @@ public abstract class SocketExchangeClient implements Client {
         this.coins = coins;
         this.exchange = exchange;
         this.client = createClient();
-        this.milestones = createMilestones(coins.size());
+        this.milestones = createSubscriptionMilestones(coins.size());
         this.batchSize = batchSize;
     }
 
@@ -141,23 +141,5 @@ public abstract class SocketExchangeClient implements Client {
         if (milestone == null) return;
 
         logger.info(String.format("%s: Subscribed to %d of %d", exchange.exchange, milestone, this.coins.size()));
-    }
-
-    private int[] createMilestones(int coinsCount) {
-        int[] milestonesPercentage = new int[]{25, 50, 75, 100};
-
-        return Arrays.stream(milestonesPercentage)
-                .map(milestone -> (int) coinsCount * milestone / 100)
-                .toArray();
-    }
-
-    private Integer getMilestone(long value, int[] milestones) {
-        int[] currentMilestone = Arrays.stream(milestones)
-                .filter(milestone -> milestone == value)
-                .toArray();
-
-        if (currentMilestone.length != 1) return null;
-
-        return currentMilestone[0];
     }
 }

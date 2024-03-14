@@ -48,8 +48,8 @@ public class Coin {
         coin.put("tradeUrl", this.tradeUrl);
         coin.put("depositUrl", this.depositUrl);
         coin.put("withdrawUrl", this.withdrawUrl);
-        coin.put("change", this.change == null ? Optional.empty() : this.change);
-        coin.put("turnover", this.turnover == null ? Optional.empty() : this.turnover);
+        coin.put("change", this.change == null ? 0 : this.change);
+        coin.put("turnover", this.turnover == null ? 0 : this.turnover);
 
         return coin;
     }
